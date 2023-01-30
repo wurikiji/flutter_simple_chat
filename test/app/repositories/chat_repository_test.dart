@@ -4,9 +4,8 @@ import 'package:simple_chat/app/repositories/chat_repository.dart';
 
 void main() {
   group('Chat', () {
-    test('has a sender and a message', () {
-      const chat = Chat('sender', 'message');
-      expect(chat.sender, equals('sender'));
+    test('has a message', () {
+      const chat = Chat('message');
       expect(chat.message, equals('message'));
     });
   });
@@ -20,13 +19,13 @@ void main() {
     });
 
     test('can send a new chat', () {
-      const chat = Chat('sender', 'message');
+      const chat = Chat('message');
       chatRepository.send(chat);
       expect(chatRepository.chats, contains(chat));
     });
 
     test('can notify when a new chat is sent', () async {
-      const chat = Chat('sender', 'message');
+      const chat = Chat('message');
       final chatStream = chatRepository.chatsStream;
       final result = expectLater(chatStream, emits(contains(chat)));
       chatRepository.send(chat);
