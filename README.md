@@ -1,16 +1,22 @@
 # simple_chat
 
-A new Flutter project.
+A simple live chat application.
 
-## Getting Started
+# Usage
 
-This project is a starting point for a Flutter application.
+Run `scripts/run_server.sh` first.
 
-A few resources to get you started if this is your first Flutter project:
+```shell
+flutter pub get
+scripts/run_server.sh
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Then run multiple instances of the app. Web is
+not supported due to the lack of gRPC support.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```shell
+flutter run -d mac
+
+# in another shell
+flutter run -d mac
+```
