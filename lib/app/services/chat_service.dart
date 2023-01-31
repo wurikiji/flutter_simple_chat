@@ -1,7 +1,8 @@
 import 'package:grpc_chat/gprc_chat.dart';
 import 'package:simple_chat/app/models/chat.dart';
+import 'package:simple_chat/app/repositories/chat_repository.dart';
 
-class ChatService {
+class ChatService with OnSend {
   final chatServer = ChatClient();
   bool isConnected = false;
 
@@ -21,4 +22,9 @@ class ChatService {
   close() async {
     await chatServer.close();
   }
+
+  @override
+  void Function(Chat newChat) get onSend => (chat) {
+        send(chat);
+      };
 }

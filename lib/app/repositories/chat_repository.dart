@@ -4,6 +4,19 @@ import 'package:flutter/foundation.dart';
 import 'package:simple_chat/app/models/chat.dart';
 
 class ChatRepository {
+  ChatRepository({
+    List<OnSend> onSendObservers = const [],
+    List<OnReceive> onReceiveObservers = const [],
+  }) {
+    for (final observer in onSendObservers) {
+      onSend(observer.onSend);
+    }
+
+    for (final observer in onReceiveObservers) {
+      onReceive(observer.onReceive);
+    }
+  }
+
   @visibleForTesting
   final List<Chat> chats = [];
   final _streamController = StreamController<List<Chat>>.broadcast();
@@ -35,4 +48,12 @@ class ChatRepository {
       callback(chat);
     });
   }
+}
+
+mixin OnSend {
+  void Function(Chat newChat) get onSend;
+}
+
+mixin OnReceive {
+  void Function(Chat newChat) get onReceive;
 }

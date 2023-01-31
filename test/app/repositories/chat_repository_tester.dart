@@ -97,5 +97,55 @@ class ChatRepositoryTester {
       subscription.cancel();
       expect(called, isFalse);
     });
+    test('should call OnSend observers when send is called', () async {
+      bool called = false;
+      final onSend = CallbackOnSendOnReceive(
+        onSend: (_) {
+          called = true;
+        },
+        onReceive: (_) {},
+      );
+      final chatRepository = ChatRepository(
+        onSendObservers: <OnSend>[
+          onSend,
+        ],
+      );
+      const chat = Chat('message');
+      chatRepository.send(chat);
+      await Future.delayed(const Duration(milliseconds: 1));
+      expect(called, isTrue);
+    });
+
+    test('should call OnReceive observers when receive is called', () async {
+      bool called = false;
+      final onReceive = CallbackOnSendOnReceive(
+        onSend: (_) {},
+        onReceive: (_) {
+          called = true;
+        },
+      );
+      final chatRepository = ChatRepository(
+        onReceiveObservers: [
+          onReceive,
+        ],
+      );
+      const chat = Chat('message');
+      chatRepository.receive(chat);
+      await Future.delayed(const Duration(milliseconds: 1));
+      expect(called, isTrue);
+    });
   }
+}
+
+class CallbackOnSendOnReceive with OnSend, OnReceive {
+  CallbackOnSendOnReceive({
+    required this.onSend,
+    required this.onReceive,
+  });
+
+  @override
+  final void Function(Chat newChat) onReceive;
+
+  @override
+  final void Function(Chat newChat) onSend;
 }

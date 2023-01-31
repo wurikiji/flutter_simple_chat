@@ -19,17 +19,17 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final repository = ChatRepository();
   final service = ChatService()..connect();
-  StreamSubscription? sendingSubscription;
+  late final repository = ChatRepository(
+    onSendObservers: [
+      service,
+    ],
+  );
   StreamSubscription? receiveSubscription;
 
   @override
   void initState() {
     super.initState();
-    sendingSubscription = repository.onSend((newChat) {
-      service.send(newChat);
-    });
     receiveSubscription = service.newChatStream.listen((newChat) {
       repository.receive(Chat(newChat));
     });
@@ -38,7 +38,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() async {
     service.close();
-    sendingSubscription?.cancel();
     receiveSubscription?.cancel();
     super.dispose();
   }
