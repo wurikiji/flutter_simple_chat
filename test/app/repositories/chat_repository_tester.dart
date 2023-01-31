@@ -32,10 +32,10 @@ class ChatRepositoryTester {
     });
 
     test(
-      'can notify when a new chat is sent using `onNewChat`',
+      'can notify when a new chat is sent using `onSend`',
       () async {
         const chat = Chat('message');
-        chatRepository.onNewChat(expectAsync1((newChat) {
+        chatRepository.onSend(expectAsync1((newChat) {
           expect(chat, equals(chat));
         }, count: 1, reason: 'onNewChat should be called once'));
         chatRepository.send(chat);
@@ -44,10 +44,10 @@ class ChatRepositoryTester {
     );
 
     test(
-      'can cancel the notification of onNewChat',
+      'can cancel the notification of onSend',
       () async {
         const chat = Chat('message');
-        final subscription = chatRepository.onNewChat(
+        final subscription = chatRepository.onSend(
           expectAsync1(
             (newChat) {
               expect(chat, equals(chat));
@@ -61,5 +61,41 @@ class ChatRepositoryTester {
       },
       timeout: const Timeout(Duration(seconds: 1)),
     );
+
+    test('can receive a new chat', () async {
+      const chat = Chat('message');
+      final chatStream = chatRepository.chatsStream;
+      final result = expectLater(chatStream, emits(contains(chat)));
+      chatRepository.receive(chat);
+      await result;
+    });
+
+    test('should notify onReceive when receive is called', () async {
+      const chat = Chat('message');
+      bool called = false;
+      final subscription = chatRepository.onReceive(
+        (_) {
+          called = true;
+        },
+      );
+      chatRepository.receive(chat);
+      await Future.delayed(const Duration(milliseconds: 1));
+      subscription.cancel();
+      expect(called, isTrue);
+    });
+
+    test('should not notify onReceive when send is called', () async {
+      const chat = Chat('message');
+      bool called = false;
+      final subscription = chatRepository.onReceive(
+        (_) {
+          called = true;
+        },
+      );
+      chatRepository.send(chat);
+      await Future.delayed(const Duration(milliseconds: 1));
+      subscription.cancel();
+      expect(called, isFalse);
+    });
   }
 }
