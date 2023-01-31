@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simple_chat/app/pages/chat_page.dart';
-import 'package:simple_chat/app/repositories/chat_repository.dart';
+import 'package:simple_chat/app/repositories/connected_chat_repository.dart';
+import 'package:simple_chat/app/services/chat_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         useMaterial3: true,
       ),
-      home: ChatPage(ChatRepository()),
+      home: ChatPage(ConnectedChatRepository(ChatService())),
     );
   }
 }

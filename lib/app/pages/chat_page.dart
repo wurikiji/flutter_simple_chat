@@ -29,7 +29,9 @@ class _ChatPageState extends State<ChatPage> {
       body: Column(
         children: [
           Expanded(
-            child: ChatListView(widget: widget),
+            child: ChatListView(
+              repository: widget.repository,
+            ),
           ),
           ChatInputBar(
             inputController: _inputController,
@@ -80,16 +82,16 @@ class ChatInputBar extends StatelessWidget {
 
 class ChatListView extends StatelessWidget {
   const ChatListView({
+    required this.repository,
     super.key,
-    required this.widget,
   });
 
-  final ChatPage widget;
+  final ChatRepository repository;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Object>(
-      stream: widget.repository.chatsStream,
+      stream: repository.chatsStream,
       builder: (context, snapshot) {
         List<Chat>? chats;
         if (snapshot.hasData) {
