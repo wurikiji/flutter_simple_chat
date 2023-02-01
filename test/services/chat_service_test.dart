@@ -9,14 +9,9 @@ void main() {
       late ChatService chatService;
       setUp(() async {
         chatService = ChatService();
-        await chatService.connect();
       });
 
       tearDown(() async => await chatService.close());
-
-      test('can connect with server', () async {
-        expect(chatService.isConnected, isTrue);
-      });
 
       test('can send a message', () {
         const chat = Chat('hello world');
@@ -28,7 +23,7 @@ void main() {
         'can recevie a message from other',
         () async {
           const chat = Chat('hello world');
-          final otherService = ChatService()..connect();
+          final otherService = ChatService();
           final stream = chatService.newChatStream;
           final result = expectLater(stream, emits('hello world'));
           otherService.send(chat);

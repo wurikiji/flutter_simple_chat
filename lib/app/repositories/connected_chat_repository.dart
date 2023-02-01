@@ -9,7 +9,6 @@ class ConnectedChatRepository extends ChatRepository {
   late StreamSubscription _subs;
 
   ConnectedChatRepository(this.service) {
-    service.connect();
     _subs = service.newChatStream.listen((chat) {
       super.send(Chat(chat));
     });

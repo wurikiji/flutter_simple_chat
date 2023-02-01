@@ -19,7 +19,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final service = ChatService()..connect();
+  final service = ChatService();
   late final repository = ChatRepository(
     onSendObservers: [
       service,

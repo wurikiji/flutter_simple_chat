@@ -4,14 +4,12 @@ import 'package:simple_chat/app/repositories/chat_repository.dart';
 
 class ChatService with OnSend {
   final chatServer = ChatClient();
-  bool isConnected = false;
 
   late Stream<String> newChatStream;
 
-  Future<void> connect() async {
+  ChatService() {
     final originalStream = chatServer.connect();
     newChatStream = originalStream.map((event) => event.text);
-    isConnected = true;
   }
 
   bool send(Chat chat) {
